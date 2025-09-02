@@ -1,24 +1,17 @@
 import React from "react";
-import { useState } from "react";
 
 const List = ({ items, setItems }) => {
-  const [completedTask, setCompletedTask] = useState([]);
-  const [deletedList, setDeletedList] = useState([]);
 
-  const handleClick = (index) => {
-    if (completedTask.includes(index)) {
-      setCompletedTask(completedTask.filter((i) => i != index));
-    } else {
-      setCompletedTask([...completedTask, index]);
-    }
-  };
-  const handleDelete = (index) => {
-    console.log("Deleting item at index:", index);
-    const filteredItems = items.filter((_, i) => i !== index);
-    console.log("New items after delete:", filteredItems);
+  const toogleComplete= (id)=>{
+    const updatedItems = items.map((item)=>
+      item.id === id ? {...item,completed: !item.completed}:item
+    );
+    setItems(updatedItems);
+  }
+  
+  const handleDelete = (id) => {
+    const filteredItems = items.filter((item) => item.id !== id);
     setItems(filteredItems);
-
-    setCompletedTask(completedTask.filter((i) => i !== index));
   };
 
   return (
@@ -26,22 +19,24 @@ const List = ({ items, setItems }) => {
       {items.length === 0 ? (
         <p>No tasks</p>
       ) : (
-        items.map((item, index) => (
-          <div key={index} className="list-item">
+        items.map((item) => (
+          <div key={item.id} className="list-item">
             <div
               className="list-text"
               style={{
-                textDecoration: completedTask.includes(index)
+                textDecoration: item.completed
                   ? "line-through"
                   : "none",
-                color: completedTask.includes(index) ? "gray" : "white",
+                color: item.completed ? "gray" : "white",
               }}
             >
-              {item}
+              {item.text}
             </div>
             <div className="button-group">
-              <button onClick={() => handleClick(index)}>Complete</button>
-              <button className="delete-btn" onClick={() => handleDelete(index)}>x</button>
+              <button onClick={() => toogleComplete(item.id)}>
+                {item.completed ? "Undo" : "Complete"}
+              </button>
+              <button className="delete-btn" onClick={() => handleDelete(item.id)}>x</button>
             </div>
           </div>
         ))

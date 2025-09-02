@@ -12,10 +12,16 @@ const App = () => {
   }
   const handleSubmit=(e)=>{
     e.preventDefault();
-    if(newItem.trim()){
-    setItems([...items,newItem.trim()])
-    setNewItem('');
+    const trimmed = newItem.trim();
+    if(!trimmed) return;
+    const newTask={
+      id: Date.now(),
+      text: trimmed,
+      completed : false
     }
+    setItems([...items,newTask])
+    setNewItem('');
+    
   }
 
   return (
@@ -34,6 +40,7 @@ const App = () => {
           value={newItem}
           onChange={handleChange}
           />
+          <button type="submit">Add</button>
         </form>
       </div>
     </div>
